@@ -1,0 +1,6 @@
+<resources>
+    <!-- Platform theme so we don't depend on extra Material XML resources;
+         all visual styling is handled by Compose's MaterialTheme. -->
+    <style name="Theme.KotlinProject" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
+
