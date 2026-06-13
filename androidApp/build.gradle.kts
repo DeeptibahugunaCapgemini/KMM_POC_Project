@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.kotlinproject.android"
+    namespace = "com.mcdonalds.kmmagentcore.android"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.kotlinproject.android"
+        applicationId = "com.mcdonalds.kmmagentcore.android"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

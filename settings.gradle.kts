@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KotlinProject"
+rootProject.name = "Agent-Core-KMM"
 include(":shared")
 include(":androidApp")

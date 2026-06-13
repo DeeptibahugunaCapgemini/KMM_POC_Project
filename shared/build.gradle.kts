@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.kmmpoc.shared"
+group = "com.mcdonalds.kmmagentcore"
 version = "0.0.1"
 
 kotlin {
@@ -78,7 +78,7 @@ android {
 publishing {
     publications {
         create<MavenPublication>("release") {
-            groupId = "com.deeptibahuguna.kmmpoc"
+            groupId = "com.mcdonalds.kmmagentcore"
             artifactId = "shared"
             version = "0.0.1"
 
