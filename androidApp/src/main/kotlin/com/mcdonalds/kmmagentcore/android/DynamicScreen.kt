@@ -1,6 +1,6 @@
 package com.mcdonalds.kmmagentcore.android
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,15 +8,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,9 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.mcdonalds.kmmagentcore.component.ChipItemComponent
+import com.mcdonalds.kmmagentcore.component.McDonaldsTopBar
+import com.mcdonalds.kmmagentcore.component.OrderInputBar
+import com.mcdonalds.kmmagentcore.component.ProductItemCard
 import com.mcdonalds.kmmagentcore.data.dto.*
 import com.mcdonalds.kmmagentcore.data.dto.ContentSection
 import com.mcdonalds.kmmagentcore.data.dto.Header
@@ -78,11 +80,11 @@ fun DynamicScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                RenderScreen(
+                    screen = current.components
+                )
 
-                current.components.forEach { RenderComponent(it) }
             }
         }
     }
@@ -98,21 +100,17 @@ fun RenderComponent(component: UIComponent) {
 
         is TextComponent -> {
             Text(
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
                 text = component.props.value
             )
         }
 
         is Header -> {
-            Text(
-                text = component.props.title,
-                style = MaterialTheme.typography.titleLarge
-            )
+            McDonaldsTopBar(component.props.title)
         }
 
         is ChipComponent -> {
-            Button(onClick = { /* handle action */ }) {
-                Text(component.props.label)
-            }
+            ChipItemComponent(modifier = Modifier.padding(start = 16.dp), chipProps =component.props)
         }
 
         is Section -> {
@@ -156,54 +154,83 @@ fun RenderComponent(component: UIComponent) {
         }
 
         is ProductCard -> {
-            Column {
-                Text(text = component.props.title)
 
-                component.props.actions.forEach {
-                    Button(onClick = { /* handle action */ }) {
-                        Text(it.label)
-                    }
-                }
-            }
+            ProductItemCard(component.props)
         }
 
         is QuickActions -> {
-            Row {
-                component.props.items.forEach {
-                    Button(onClick = { }) {
-                        Text(it.label)
+            Column {
+
+                // ✅ Top Divider
+                Divider(
+                    color = Color.LightGray,
+                    thickness = 1.dp
+                )
+
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .fillMaxWidth()
+                        .padding(start = 24.dp, top = 8.dp, bottom = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp) // ✅ space between chips
+                ) {
+                    component.props.items.forEach {
+                        ChipItemComponent(chipProps = it)
                     }
                 }
+                Divider(
+                    color = Color.LightGray,
+                    thickness = 1.dp
+                )
             }
         }
 
         is InputBar -> {
-            Row {
-                TextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = {
-                        Text(component.props.placeholder)
-                    }
-                )
+            OrderInputBar(component.props.placeholder, component.props.actions)
 
-                component.props.actions.forEach {
-                    Button(onClick = { }) {
-                        Text(it.label)
-                    }
+        }
+    }
+}
+
+@Composable
+fun RenderScreen(screen: List<UIComponent>) {
+
+    val header = screen.find { it is Header }
+    val inputBar = screen.find { it is InputBar }
+    val quickActions = screen.find { it is QuickActions }
+
+    val content = screen.filter {
+        it !is Header && it !is InputBar && it !is QuickActions
+    }
+
+    Scaffold(
+        topBar = {
+            (header as? Header)?.let {
+                McDonaldsTopBar(it.props.title)
+            }
+        },
+        bottomBar = {
+            Column {
+                (quickActions as? QuickActions)?.let {
+                    RenderComponent(it)
                 }
+
+                (inputBar as? InputBar)?.let {
+                    OrderInputBar(it.props.placeholder, it.props.actions)
+                }
+            }
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            items(content) { component ->
+                RenderComponent(component)
             }
         }
     }
 }
-/** Converts a "#RRGGBB" / "#AARRGGBB" token value into a Compose [Color]. */
-private fun parseColor(hex: String?): Color {
-    val cleaned = hex?.removePrefix("#") ?: return Color.Black
-    val value = cleaned.toLongOrNull(16) ?: return Color.Black
-    return when (cleaned.length) {
-        6 -> Color(0xFF000000 or value)
-        8 -> Color(value)
-        else -> Color.Black
-    }
-}
+
 

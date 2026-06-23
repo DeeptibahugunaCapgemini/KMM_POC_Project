@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.compose.material3)
     implementation(libs.kotlinx.coroutines.core)
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     debugImplementation(libs.compose.ui.tooling)
 }
