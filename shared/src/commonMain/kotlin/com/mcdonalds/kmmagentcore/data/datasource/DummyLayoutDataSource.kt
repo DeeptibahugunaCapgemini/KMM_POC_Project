@@ -6,184 +6,211 @@ package com.mcdonalds.kmmagentcore.data.datasource
  */
 class DummyLayoutDataSource : LayoutRemoteDataSource {
 
-    override suspend fun fetchLayoutJson(screenId: String): String = when (screenId) {
-        "restaurant_menu" -> RESTAURANT_JSON
-        else -> SAMPLE_JSON
-    }
+    override suspend fun fetchLayoutJson(screenId: String): String = SAMPLE_JSON
 
     companion object {
-        private val SAMPLE_JSON = """
-            {
-              "version": "1.0",
-              "screenId": "home_dashboard",
-              "title": "Welcome Back",
-              "tokens": {
-                "colors": {
-                  "primary": "#3366FF",
-                  "onPrimary": "#FFFFFF",
-                  "surface": "#F5F5F5",
-                  "textPrimary": "#1A1A1A"
-                },
-                "spacing": { "small": 8, "medium": 16, "large": 24 },
-                "typography": {
-                  "heading": { "fontSize": 24, "fontWeight": "bold" },
-                  "body": { "fontSize": 16, "fontWeight": "normal" }
-                }
-              },
-              "components": [
-                {
-                  "id": "root_column",
-                  "type": "column",
-                  "spacingToken": "medium",
-                  "children": [
-                    {
-                      "id": "title_text",
-                      "type": "text",
-                      "text": "Your Daily Summary",
-                      "colorToken": "textPrimary",
-                      "typographyToken": "heading"
-                    },
-                    {
-                      "id": "body_text",
-                      "type": "text",
-                      "text": "You have 3 new tasks today.",
-                      "colorToken": "textPrimary",
-                      "typographyToken": "body"
-                    },
-                    {
-                      "id": "cta_button",
-                      "type": "button",
-                      "text": "View Tasks",
-                      "colorToken": "primary",
-                      "spacingToken": "small",
-                      "action": {
-                        "type": "navigate",
-                        "payload": { "destination": "tasks_screen" }
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-        """.trimIndent()
-
-        private val RESTAURANT_JSON = """
-            {
-              "version": "1.0",
-              "screenId": "restaurant_menu",
-              "title": "Tasty Bites Restaurant",
-              "tokens": {
-                "colors": {
-                  "primary": "#E8552D",
-                  "onPrimary": "#FFFFFF",
-                  "surface": "#FFFFFF",
-                  "cardBackground": "#F7F7F7",
-                  "textPrimary": "#1A1A1A",
-                  "textSecondary": "#6B6B6B",
-                  "price": "#E8552D"
-                },
-                "spacing": { "small": 8, "medium": 16, "large": 24 },
-                "typography": {
-                  "heading": { "fontSize": 24, "fontWeight": "bold" },
-                  "cardTitle": { "fontSize": 20, "fontWeight": "bold" },
-                  "productName": { "fontSize": 18, "fontWeight": "bold" },
-                  "price": { "fontSize": 16, "fontWeight": "bold" },
-                  "body": { "fontSize": 14, "fontWeight": "normal" }
-                }
-              },
-              "components": [
-                {
-                  "id": "menu_card",
-                  "type": "column",
-                  "spacingToken": "medium",
-                  "colorToken": "cardBackground",
-                  "children": [
-                    {
-                      "id": "menu_card_title",
-                      "type": "text",
-                      "text": "Popular Dishes",
-                      "colorToken": "textPrimary",
-                      "typographyToken": "cardTitle"
-                    },
-                    {
-                      "id": "product_card_1",
-                      "type": "column",
-                      "spacingToken": "small",
-                      "colorToken": "surface",
-                      "children": [
-                        {
-                          "id": "product_1_name",
-                          "type": "text",
-                          "text": "Margherita Pizza",
-                          "colorToken": "textPrimary",
-                          "typographyToken": "productName"
-                        },
-                        {
-                          "id": "product_1_price",
-                          "type": "text",
-                          "text": "${'$'}12.99",
-                          "colorToken": "price",
-                          "typographyToken": "price"
-                        },
-                        {
-                          "id": "product_1_add_button",
-                          "type": "button",
-                          "text": "Add",
-                          "colorToken": "primary",
-                          "spacingToken": "small",
-                          "action": {
-                            "type": "addToCart",
-                            "payload": {
-                              "productId": "pizza_margherita",
-                              "name": "Margherita Pizza",
-                              "price": "12.99"
-                            }
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "id": "product_card_2",
-                      "type": "column",
-                      "spacingToken": "small",
-                      "colorToken": "surface",
-                      "children": [
-                        {
-                          "id": "product_2_name",
-                          "type": "text",
-                          "text": "Classic Cheeseburger",
-                          "colorToken": "textPrimary",
-                          "typographyToken": "productName"
-                        },
-                        {
-                          "id": "product_2_price",
-                          "type": "text",
-                          "text": "${'$'}9.49",
-                          "colorToken": "price",
-                          "typographyToken": "price"
-                        },
-                        {
-                          "id": "product_2_add_button",
-                          "type": "button",
-                          "text": "Add",
-                          "colorToken": "primary",
-                          "spacingToken": "small",
-                          "action": {
-                            "type": "addToCart",
-                            "payload": {
-                              "productId": "burger_classic",
-                              "name": "Classic Cheeseburger",
-                              "price": "9.49"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-        """.trimIndent()
+        private val SAMPLE_JSON = "{\n" +
+                "  \"screen\": {\n" +
+                "    \"id\": \"personalised_order_agent\",\n" +
+                "    \"type\": \"page\",\n" +
+                "    \"layout\": \"vertical\",\n" +
+                "    \"components\": [\n" +
+                "\n" +
+                "      {\n" +
+                "        \"type\": \"header_section\",\n" +
+                "        \"components\": [\n" +
+                "          {\n" +
+                "            \"type\": \"header\",\n" +
+                "            \"props\": {\n" +
+                "              \"title\": \"McDonald's\",\n" +
+                "              \"actions\": [\n" +
+                "                { \"type\": \"icon\", \"name\": \"cart\" },\n" +
+                "                { \"type\": \"icon\", \"name\": \"profile\" }\n" +
+                "              ]\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      },\n" +
+                "\n" +
+                "      {\n" +
+                "        \"type\": \"content_section\",\n" +
+                "        \"layout\": \"vertical\",\n" +
+                "        \"components\": [\n" +
+                "          {\n" +
+                "            \"type\": \"section\",\n" +
+                "            \"layout\": \"vertical\",\n" +
+                "            \"components\": [\n" +
+                "              {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"props\": {\n" +
+                "                  \"value\": \"Good afternoon\",\n" +
+                "                  \"style\": \"subtle\"\n" +
+                "                }\n" +
+                "              },\n" +
+                "              {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"props\": {\n" +
+                "                  \"value\": \"Welcome, Abdul\",\n" +
+                "                  \"style\": \"title\"\n" +
+                "                }\n" +
+                "              },\n" +
+                "              {\n" +
+                "                \"type\": \"chip\",\n" +
+                "                \"props\": {\n" +
+                "                  \"icon\": \"square\",\n" +
+                "                  \"label\": \"Tuesday lunch • Chicago\"\n" +
+                "                }\n" +
+                "              }\n" +
+                "            ]\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"type\": \"section\",\n" +
+                "            \"components\": [\n" +
+                "              {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"props\": {\n" +
+                "                  \"value\": \"PICKED FOR YOU\",\n" +
+                "                  \"style\": \"section_header\"\n" +
+                "                }\n" +
+                "              }\n" +
+                "            ]\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"type\": \"list\",\n" +
+                "            \"props\": {\n" +
+                "              \"items\": [\n" +
+                "                {\n" +
+                "                  \"type\": \"product_card\",\n" +
+                "                  \"props\": {\n" +
+                "                    \"id\": \"item_1\",\n" +
+                "                    \"highlight\": true,\n" +
+                "                    \"image\": \"meal\",\n" +
+                "                    \"title\": \"McSpicy Chicken Meal\",\n" +
+                "                    \"subtitle\": \"Your usual · Large\",\n" +
+                "                    \"price\": {\n" +
+                "                      \"original\": 10.49,\n" +
+                "                      \"discounted\": 8.49,\n" +
+                "                      \"currency\": \"\$\"\n" +
+                "                    },\n" +
+                "                    \"loyalty\": {\n" +
+                "                      \"points\": 420,\n" +
+                "                      \"label\": \"Earns 420 pts\"\n" +
+                "                    },\n" +
+                "                    \"actions\": [\n" +
+                "                      {\n" +
+                "                        \"type\": \"button\",\n" +
+                "                        \"label\": \"Add\",\n" +
+                "                        \"action\": \"add_to_cart\",\n" +
+                "                        \"payload\": { \"item_id\": \"item_1\" }\n" +
+                "                      }\n" +
+                "                    ]\n" +
+                "                  }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"type\": \"product_card\",\n" +
+                "                  \"props\": {\n" +
+                "                    \"id\": \"item_2\",\n" +
+                "                    \"icon\": \"meal\",\n" +
+                "                    \"title\": \"McWrap + McCafé\",\n" +
+                "                    \"subtitle\": \"Popular right now\",\n" +
+                "                    \"price\": {\n" +
+                "                      \"value\": 10.49,\n" +
+                "                      \"currency\": \"\$\"\n" +
+                "                    },\n" +
+                "                    \"loyalty\": {\n" +
+                "                      \"points\": 380,\n" +
+                "                      \"label\": \"Earns 380 pts\"\n" +
+                "                    },\n" +
+                "                    \"actions\": [\n" +
+                "                      {\n" +
+                "                        \"type\": \"button\",\n" +
+                "                        \"label\": \"Add\",\n" +
+                "                        \"action\": \"add_to_cart\",\n" +
+                "                        \"payload\": { \"item_id\": \"item_2\" }\n" +
+                "                      }\n" +
+                "                    ]\n" +
+                "                  }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"type\": \"product_card\",\n" +
+                "                  \"props\": {\n" +
+                "                    \"id\": \"item_3\",\n" +
+                "                    \"icon\": \"meal\",\n" +
+                "                    \"title\": \"Filet-O-Fish Meal\",\n" +
+                "                    \"subtitle\": \"Fast prep · Ready now\",\n" +
+                "                    \"price\": {\n" +
+                "                      \"value\": 9.29,\n" +
+                "                      \"currency\": \"\$\"\n" +
+                "                    },\n" +
+                "                    \"loyalty\": {\n" +
+                "                      \"points\": 340,\n" +
+                "                      \"label\": \"Earns 340 pts\"\n" +
+                "                    },\n" +
+                "                    \"actions\": [\n" +
+                "                      {\n" +
+                "                        \"type\": \"button\",\n" +
+                "                        \"label\": \"Add\",\n" +
+                "                        \"action\": \"add_to_cart\",\n" +
+                "                        \"payload\": { \"item_id\": \"item_3\" }\n" +
+                "                      }\n" +
+                "                    ]\n" +
+                "                  }\n" +
+                "                }\n" +
+                "              ]\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      },\n" +
+                "\n" +
+                "      {\n" +
+                "        \"type\": \"footer_section\",\n" +
+                "        \"layout\": \"vertical\",\n" +
+                "        \"components\": [\n" +
+                "          {\n" +
+                "            \"type\": \"quick_actions\",\n" +
+                "            \"layout\": \"horizontal_scroll\",\n" +
+                "            \"props\": {\n" +
+                "              \"items\": [\n" +
+                "                {\n" +
+                "                  \"type\": \"chip\",\n" +
+                "                  \"label\": \"Desserts\",\n" +
+                "                  \"action\": \"navigate_category\",\n" +
+                "                  \"payload\": { \"category\": \"desserts\" }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"type\": \"chip\",\n" +
+                "                  \"label\": \"Chicken\",\n" +
+                "                  \"action\": \"navigate_category\",\n" +
+                "                  \"payload\": { \"category\": \"chicken\" }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"type\": \"chip\",\n" +
+                "                  \"label\": \"View Cart\",\n" +
+                "                  \"action\": \"view_cart\"\n" +
+                "                }\n" +
+                "              ]\n" +
+                "            }\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"type\": \"input_bar\",\n" +
+                "            \"props\": {\n" +
+                "              \"placeholder\": \"Type your order...\",\n" +
+                "              \"actions\": [\n" +
+                "                {\n" +
+                "                  \"type\": \"button\",\n" +
+                "                  \"style\": \"floating\",\n" +
+                "                  \"label\": \"Preview\",\n" +
+                "                  \"action\": \"preview_order\"\n" +
+                "                }\n" +
+                "              ]\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}".trimIndent()
     }
 }
 

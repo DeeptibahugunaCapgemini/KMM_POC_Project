@@ -1,6 +1,6 @@
 package com.mcdonalds.kmmagentcore.domain.usecase
 
-import com.mcdonalds.kmmagentcore.domain.model.ScreenLayout
+import com.mcdonalds.kmmagentcore.data.dto.Screen
 import com.mcdonalds.kmmagentcore.domain.repository.LayoutRepository
 
 /**
@@ -9,7 +9,7 @@ import com.mcdonalds.kmmagentcore.domain.repository.LayoutRepository
 class GetScreenLayoutUseCase(
     private val repository: LayoutRepository
 ) {
-    suspend operator fun invoke(screenId: String): ScreenLayout =
+    suspend operator fun invoke(screenId: String): Screen =
         repository.getScreenLayout(screenId)
 }
 

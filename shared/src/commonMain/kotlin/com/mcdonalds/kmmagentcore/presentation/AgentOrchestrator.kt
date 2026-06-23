@@ -29,9 +29,14 @@ class AgentOrchestrator(
     /** Suspend variant for callers that already have a coroutine context. */
     suspend fun loadScreen(screenId: String) {
         _state.value = ScreenState.Loading
+
         _state.value = try {
-            val layout = getScreenLayout(screenId)
-            ScreenState.Ready(layout.title, layout.components)
+            val screen = getScreenLayout(screenId)
+            ScreenState.Ready(
+                screenId = screen.screen.id,   // or null / static if needed
+                components = screen.screen.components
+            )
+
         } catch (e: Exception) {
             ScreenState.Error(e.message ?: "Failed to load layout")
         }

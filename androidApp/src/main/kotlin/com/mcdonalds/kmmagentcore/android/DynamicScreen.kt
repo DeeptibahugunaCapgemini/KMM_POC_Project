@@ -14,7 +14,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,8 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mcdonalds.kmmagentcore.domain.model.ComponentType
-import com.mcdonalds.kmmagentcore.domain.model.ResolvedComponent
+import com.mcdonalds.kmmagentcore.data.dto.*
+import com.mcdonalds.kmmagentcore.data.dto.ContentSection
+import com.mcdonalds.kmmagentcore.data.dto.Header
+import com.mcdonalds.kmmagentcore.data.dto.Section
+import com.mcdonalds.kmmagentcore.data.dto.TextComponent
+import com.mcdonalds.kmmagentcore.data.dto.UIComponent
 import com.mcdonalds.kmmagentcore.presentation.AgentOrchestrator
 import com.mcdonalds.kmmagentcore.presentation.ScreenState
 
@@ -75,11 +81,7 @@ fun DynamicScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(
-                    text = current.title,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold
-                )
+
                 current.components.forEach { RenderComponent(it) }
             }
         }
@@ -90,63 +92,110 @@ fun DynamicScreen(
  * Recursively maps a resolved schema node to a native Compose widget.
  */
 @Composable
-fun RenderComponent(component: ResolvedComponent) {
-    when (component.type) {
-        ComponentType.COLUMN -> {
-            // A column with a resolved background color is treated as a "card".
-            if (component.colorHex != null) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = parseColor(component.colorHex)
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    border = BorderStroke(1.dp, Color(0xFFE0E0E0))
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(component.spacing.dp)
-                    ) {
-                        component.children.forEach { RenderComponent(it) }
-                    }
-                }
-            } else {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(component.spacing.dp)
-                ) {
-                    component.children.forEach { RenderComponent(it) }
+fun RenderComponent(component: UIComponent) {
+
+    when (component) {
+
+        is TextComponent -> {
+            Text(
+                text = component.props.value
+            )
+        }
+
+        is Header -> {
+            Text(
+                text = component.props.title,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+
+        is ChipComponent -> {
+            Button(onClick = { /* handle action */ }) {
+                Text(component.props.label)
+            }
+        }
+
+        is Section -> {
+            Column {
+                component.components.forEach {
+                    RenderComponent(it)
                 }
             }
         }
 
-        ComponentType.ROW -> Row(
-            horizontalArrangement = Arrangement.spacedBy(component.spacing.dp)
-        ) {
-            component.children.forEach { RenderComponent(it) }
+        is ContentSection -> {
+            Column {
+                component.components.forEach {
+                    RenderComponent(it)
+                }
+            }
         }
 
-        ComponentType.TEXT -> Text(
-            text = component.text.orEmpty(),
-            color = parseColor(component.colorHex),
-            fontSize = (component.fontSize ?: 14).sp,
-            fontWeight = if (component.fontWeight == "bold") FontWeight.Bold else FontWeight.Normal
-        )
-
-        ComponentType.BUTTON -> Button(
-            onClick = { /* TODO: dispatch component.action?.type + payload */ },
-            modifier = Modifier.padding(top = component.spacing.dp)
-        ) {
-            Text(component.text.orEmpty())
+        is HeaderSection -> {
+            Column {
+                component.components.forEach {
+                    RenderComponent(it)
+                }
+            }
         }
 
-        ComponentType.IMAGE,
-        ComponentType.SPACER,
-        ComponentType.UNKNOWN -> Unit
+        is FooterSection -> {
+            Column {
+                component.components.forEach {
+                    RenderComponent(it)
+                }
+            }
+        }
+
+        is ListComponent -> {
+            Column {
+                component.props.items.forEach {
+                    RenderComponent(it)
+                }
+            }
+        }
+
+        is ProductCard -> {
+            Column {
+                Text(text = component.props.title)
+
+                component.props.actions.forEach {
+                    Button(onClick = { /* handle action */ }) {
+                        Text(it.label)
+                    }
+                }
+            }
+        }
+
+        is QuickActions -> {
+            Row {
+                component.props.items.forEach {
+                    Button(onClick = { }) {
+                        Text(it.label)
+                    }
+                }
+            }
+        }
+
+        is InputBar -> {
+            Row {
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    placeholder = {
+                        Text(component.props.placeholder)
+                    }
+                )
+
+                component.props.actions.forEach {
+                    Button(onClick = { }) {
+                        Text(it.label)
+                    }
+                }
+            }
+        }
     }
 }
-
 /** Converts a "#RRGGBB" / "#AARRGGBB" token value into a Compose [Color]. */
 private fun parseColor(hex: String?): Color {
     val cleaned = hex?.removePrefix("#") ?: return Color.Black

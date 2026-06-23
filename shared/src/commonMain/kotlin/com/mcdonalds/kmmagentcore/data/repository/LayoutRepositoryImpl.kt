@@ -1,9 +1,8 @@
 package com.mcdonalds.kmmagentcore.data.repository
 
 import com.mcdonalds.kmmagentcore.data.datasource.LayoutRemoteDataSource
-import com.mcdonalds.kmmagentcore.data.dto.LayoutSchemaDto
+import com.mcdonalds.kmmagentcore.data.dto.Screen
 import com.mcdonalds.kmmagentcore.data.mapper.LayoutMapper
-import com.mcdonalds.kmmagentcore.domain.model.ScreenLayout
 import com.mcdonalds.kmmagentcore.domain.repository.LayoutRepository
 import kotlinx.serialization.json.Json
 
@@ -17,10 +16,17 @@ class LayoutRepositoryImpl(
     private val json: Json = Json { ignoreUnknownKeys = true }
 ) : LayoutRepository {
 
-    override suspend fun getScreenLayout(screenId: String): ScreenLayout {
+
+    override suspend fun getScreenLayout(screenId: String): Screen {
+       // val rawJson = dataSource.fetchLayoutJson(screenId)
         val rawJson = dataSource.fetchLayoutJson(screenId)
-        val dto = json.decodeFromString<LayoutSchemaDto>(rawJson)
-        return mapper.toDomain(dto)
+
+        val screen = json.decodeFromString<Screen>(rawJson)
+
+        val mapped = mapper.map(screen) // optional
+
+        return mapped
     }
+
 }
 
