@@ -1,6 +1,17 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.gradle.api.publish.maven.MavenPublication
 
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import java.io.FileInputStream
+import java.util.Properties
+
+
+
+group = "com.mcdonalds.agentic-ordering-kmm"
+version =  "0.0.1"
+var releaseOrDebug = "debug"
+
+val libName = "AgenticOrdeingKMM"
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,8 +19,6 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.mcdonalds.kmmagentcore"
-version = "0.0.1"
 
 kotlin {
 
@@ -27,16 +36,55 @@ kotlin {
     }
 
     // ✅ iOS TARGETS
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    val xcFramework = XCFramework(libName)
 
-    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().configureEach {
-        binaries.framework {
-            baseName = "shared"
-            isStatic = true
+//    iosX64()
+    iosArm64(){
+        binaries{
+            framework{
+                baseName = libName
+                xcFramework.add(this)
+            }
         }
     }
+    iosSimulatorArm64(){
+        binaries{
+            framework{
+                baseName = libName
+                xcFramework.add(this)
+            }
+        }
+    }
+    iosX64{
+        binaries{
+            framework{
+                baseName = libName
+                xcFramework.add(this)
+            }
+        }
+    }
+
+    publishing {
+        if (project.hasProperty("args")) {
+            releaseOrDebug = project.property("args").toString()
+        }
+        repositories {
+            var repoKey = "agentic-ordering-kmm"
+            if ("$releaseOrDebug" == "release") {
+                repoKey = "agentic-ordering-kmm-release"
+            }
+            println("Property selected Repo $repoKey")
+            maven("https://mcd.jfrog.io/artifactory/${repoKey}") {
+                credentials {
+                    if (project.hasProperty("userName") && project.hasProperty("password")) {
+                        username = project.property("userName").toString()
+                        password = project.property("password").toString()
+                    }
+                }
+            }
+        }
+    }
+
 
     sourceSets {
         val commonMain by getting {
@@ -64,38 +112,28 @@ kotlin {
         }
     }
 }
-
+afterEvaluate {
+    configure<PublishingExtension> {
+        publications.all {
+            val mavenPublication = this as? MavenPublication
+            mavenPublication?.artifactId =
+                "${project.name}${
+                    "-$name".replace("-androidRelease", "-android")
+                        .replace("-androidDebug", "-android-debug")
+                        .takeUnless { "kotlinMultiplatform" in name }.orEmpty()
+                }"
+        }
+    }
+}
 android {
-    namespace = "com.deeptibahuguna.kmmpoc"
+    namespace = "com.mcdonalds.kmmpoc"
     compileSdk = 35
 
     defaultConfig {
         minSdk = 24
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    // ✅ REQUIRED FOR PUBLISHING
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            groupId = "com.mcdonalds.kmmagentcore"
-            artifactId = "shared"
-            version = "0.0.1"
-
-            afterEvaluate {
-                from(components["kotlin"])
-            }
-        }
     }
 }
