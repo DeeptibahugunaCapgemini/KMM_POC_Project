@@ -1,9 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.gradle.api.publish.maven.MavenPublication
-
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-import java.io.FileInputStream
-import java.util.Properties
 
 
 
@@ -98,7 +95,7 @@ publishing {
         var repoKey = "agentic-ordering-kmm-snapshot-android"
 
         if (releaseOrDebug == "release") {
-            repoKey = "agentic-ordering-kmm-release-snapshot-androi"
+            repoKey = "agentic-ordering-kmm-release-snapshot-android"
         }
 
         println("Property selected Repo $repoKey")
