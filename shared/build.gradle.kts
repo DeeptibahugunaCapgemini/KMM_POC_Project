@@ -7,8 +7,8 @@ import java.util.Properties
 
 
 
-group = "com.mcdonalds.agentic-ordering-kmm"
-version =  "0.0.1"
+group = "com.mcdonalds.kmmagentcore"
+version =  "0.0.1-SNAPSHOT"
 var releaseOrDebug = "debug"
 
 val libName = "AgenticOrdeingKMM"
@@ -64,28 +64,6 @@ kotlin {
         }
     }
 
-    publishing {
-        if (project.hasProperty("args")) {
-            releaseOrDebug = project.property("args").toString()
-        }
-        repositories {
-            var repoKey = "agentic-ordering-kmm"
-            if ("$releaseOrDebug" == "release") {
-                repoKey = "agentic-ordering-kmm-release"
-            }
-            println("Property selected Repo $repoKey")
-            maven("https://mcd.jfrog.io/artifactory/${repoKey}") {
-                credentials {
-                    if (project.hasProperty("userName") && project.hasProperty("password")) {
-                        username = project.property("userName").toString()
-                        password = project.property("password").toString()
-                    }
-                }
-            }
-        }
-    }
-
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -112,6 +90,28 @@ kotlin {
         }
     }
 }
+publishing {
+    if (project.hasProperty("args")) {
+        releaseOrDebug = project.property("args").toString()
+    }
+    repositories {
+        var repoKey = "agentic-ordering-kmm-snapshot-android"
+
+        if (releaseOrDebug == "release") {
+            repoKey = "agentic-ordering-kmm-release-snapshot-androi"
+        }
+
+        println("Property selected Repo $repoKey")
+        maven("https://mcd.jfrog.io/artifactory/${repoKey}") {
+            credentials {
+                username = providers.gradleProperty("username").orNull
+                password = providers.gradleProperty("Password").orNull
+
+            }
+        }
+    }
+}
+
 afterEvaluate {
     configure<PublishingExtension> {
         publications.all {
@@ -126,7 +126,7 @@ afterEvaluate {
     }
 }
 android {
-    namespace = "com.mcdonalds.kmmpoc"
+    namespace = "com.mcdonalds.kmmagentcore"
     compileSdk = 35
 
     defaultConfig {
