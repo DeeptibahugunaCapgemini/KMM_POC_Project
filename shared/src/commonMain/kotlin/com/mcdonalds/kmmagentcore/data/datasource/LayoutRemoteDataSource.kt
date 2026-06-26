@@ -5,6 +5,6 @@ package com.mcdonalds.kmmagentcore.data.datasource
  * (network, cache, local bundle, etc.).
  */
 interface LayoutRemoteDataSource {
-    suspend fun fetchLayoutJson(screenId: String): String
+    suspend fun fetchLayoutJson(userId: String, input: String): String
 }
 

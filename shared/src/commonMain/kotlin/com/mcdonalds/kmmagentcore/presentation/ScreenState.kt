@@ -1,6 +1,6 @@
 package com.mcdonalds.kmmagentcore.presentation
 
-import com.mcdonalds.kmmagentcore.data.dto.UIComponent
+import com.mcdonalds.kmmagentcore.data.dto.SDUIComponent
 
 /**
  * UI-agnostic state the native renderers observe. Compose/SwiftUI simply
@@ -12,7 +12,7 @@ sealed interface ScreenState {
 
     data class Ready(
         val screenId: String,
-        val components: List<UIComponent>
+        val components: List<SDUIComponent>
     ) : ScreenState
 
     data class Error(

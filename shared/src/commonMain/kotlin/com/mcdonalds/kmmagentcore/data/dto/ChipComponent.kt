@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @SerialName("chip")
 data class ChipComponent(
     override val type: String,
-    val props: ChipProps
-) : UIComponent()
+    val props: ChipProps ? = null
+) : SDUIComponent()
 
 @Serializable
 data class ChipProps(

@@ -4,14 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("text")
-data class TextComponent(
+@SerialName("message")
+data class MessageComponent(
+    val label : String?=null,
     override val type: String,
-    val props: TextProps
 ) : SDUIComponent()
-
-@Serializable
-data class TextProps(
-    val value: String,
-    val style: String?
-)

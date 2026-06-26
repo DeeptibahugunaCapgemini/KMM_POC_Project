@@ -21,20 +21,25 @@ class AgentOrchestrator(
     private val _state = MutableStateFlow<ScreenState>(ScreenState.Loading)
     val state: StateFlow<ScreenState> = _state.asStateFlow()
 
-    /** Fire-and-forget entry point convenient for native callers. */
-    fun load(screenId: String) {
-        scope.launch { loadScreen(screenId) }
-    }
 
     /** Suspend variant for callers that already have a coroutine context. */
-    suspend fun loadScreen(screenId: String) {
+    suspend fun loadScreen(
+        userId: String,
+        input: String
+    ) {
         _state.value = ScreenState.Loading
 
         _state.value = try {
-            val screen = getScreenLayout(screenId)
+            val response = getScreenLayout(
+                userId,
+                input
+            )
+
+            val page = response.screen   // Navigate properly
+
             ScreenState.Ready(
-                screenId = screen.screen.id,   // or null / static if needed
-                components = screen.screen.components
+                screenId = page.id,
+                components = page.components
             )
 
         } catch (e: Exception) {

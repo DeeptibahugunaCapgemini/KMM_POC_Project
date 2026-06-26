@@ -1,5 +1,4 @@
 package com.mcdonalds.kmmagentcore.data.dto
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,7 +7,7 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-sealed class UIComponent {
+sealed class SDUIComponent {
     abstract val type: String
 }
 

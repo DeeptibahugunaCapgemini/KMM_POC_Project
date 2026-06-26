@@ -4,8 +4,11 @@ import com.mcdonalds.kmmagentcore.data.remote.createHttpClient
 import io.ktor.client.HttpClient
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.contentType
 
 /**
  * Real [LayoutRemoteDataSource] that fetches the raw layout JSON from the
@@ -23,14 +26,26 @@ class KtorLayoutDataSource(
     private val baseUrl: String = DEFAULT_BASE_URL
 ) : LayoutRemoteDataSource {
 
-    override suspend fun fetchLayoutJson(screenId: String): String =
-        client.get("$baseUrl/$LAYOUTS_PATH/$screenId") {
-            accept(ContentType.Application.Json)
+
+    override suspend fun fetchLayoutJson(
+        userId: String,
+        input: String
+    ): String {
+        return client.post(baseUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(
+                mapOf(
+                    "userId" to userId,
+                    "input" to input
+                )
+            )
         }.bodyAsText()
+    }
+
 
     companion object {
         /** Replace with your real backend host. */
-        const val DEFAULT_BASE_URL: String = "https://api.kmm-agent.example.com"
+        const val DEFAULT_BASE_URL: String = "https://personalised-order-agent-619198933329.asia-south1.run.app/api"
         private const val LAYOUTS_PATH: String = "v1/layouts"
     }
 }
