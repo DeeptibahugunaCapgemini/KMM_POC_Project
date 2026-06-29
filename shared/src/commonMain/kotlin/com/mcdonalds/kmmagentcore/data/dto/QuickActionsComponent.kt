@@ -4,16 +4,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
-
 @Serializable
-@SerialName("header")
-data class Header(
+@SerialName("quick_actions")
+data class QuickActions(
     override val type: String,
-    val props: HeaderProps
-) : UIComponent()
+    val props: QuickActionsProps ? = null
+) : SDUIComponent()
 
 @Serializable
-data class HeaderProps(
-    val title: String,
-    val actions: List<IconAction>
+data class QuickActionsProps(
+    val items: List<ChipProps>
 )

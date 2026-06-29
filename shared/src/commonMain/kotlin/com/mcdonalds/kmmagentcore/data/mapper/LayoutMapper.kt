@@ -1,9 +1,7 @@
 package com.mcdonalds.kmmagentcore.data.mapper
 
 import com.mcdonalds.kmmagentcore.data.dto.*
-import com.mcdonalds.kmmagentcore.data.dto.HeaderSection
-import com.mcdonalds.kmmagentcore.data.dto.Screen
-import com.mcdonalds.kmmagentcore.data.dto.UIComponent
+import com.mcdonalds.kmmagentcore.data.dto.SDUIComponent
 
 /**
  * Converts wire-format DTOs into domain entities, resolving every design
@@ -11,15 +9,17 @@ import com.mcdonalds.kmmagentcore.data.dto.UIComponent
  */
 class LayoutMapper {
 
-        fun map(screen: Screen): Screen {
-            return screen.copy(
-                screen = screen.screen.copy(
-                    components = screen.screen.components.map { it.process() }
+    fun map(response: OrderAgentResponse): OrderAgentResponse {
+        return response.copy(
+                screen = response.screen.copy(
+                    components = response.screen.components.map { it.process() }
                 )
-            )
-        }
 
-        private fun UIComponent.process(): UIComponent {
+        )
+    }
+
+
+    private fun SDUIComponent.process(): SDUIComponent {
             return when (this) {
 
                 is Section -> copy(
@@ -30,9 +30,6 @@ class LayoutMapper {
                     components = components.map { it.process() }
                 )
 
-                is HeaderSection -> copy(
-                    components = components.map { it.process() }
-                )
 
                 is FooterSection -> copy(
                     components = components.map { it.process() }

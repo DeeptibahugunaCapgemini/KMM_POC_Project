@@ -8,9 +8,9 @@ import kotlinx.serialization.Serializable
 data class ListComponent(
     override val type: String,
     val props: ListProps
-) : UIComponent()
+) : SDUIComponent()
 
 @Serializable
 data class ListProps(
-    val items: List<UIComponent>
+    val items: List<SDUIComponent>
 )

@@ -8,6 +8,8 @@ import com.mcdonalds.kmmagentcore.data.repository.LayoutRepositoryImpl
 import com.mcdonalds.kmmagentcore.domain.repository.LayoutRepository
 import com.mcdonalds.kmmagentcore.domain.usecase.GetScreenLayoutUseCase
 import com.mcdonalds.kmmagentcore.presentation.AgentOrchestrator
+import io.ktor.client.HttpClient
+
 //import io.ktor.client.HttpClient
 
 /**
@@ -22,12 +24,12 @@ object SharedModule {
     /** Backend root for the layout API. Override before first use if needed. */
     var baseUrl: String = KtorLayoutDataSource.DEFAULT_BASE_URL
 
-//    private val httpClient: HttpClient by lazy { createHttpClient() }
-//
-//    private val dataSource: LayoutRemoteDataSource by lazy {
-//        KtorLayoutDataSource(httpClient, baseUrl)
-//    }
-    private val dataSource: LayoutRemoteDataSource by lazy { DummyLayoutDataSource() }
+    private val httpClient: HttpClient by lazy { createHttpClient() }
+
+    private val dataSource: LayoutRemoteDataSource by lazy {
+        KtorLayoutDataSource(httpClient, baseUrl)
+    }
+ //   private val dataSource: LayoutRemoteDataSource by lazy { DummyLayoutDataSource() }
 
 
     private val repository: LayoutRepository by lazy {
