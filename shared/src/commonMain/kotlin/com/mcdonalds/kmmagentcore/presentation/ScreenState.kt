@@ -12,8 +12,10 @@ sealed interface ScreenState {
 
     data class Ready(
         val screenId: String,
-        val components: List<SDUIComponent>
-    ) : ScreenState
+        val components: List<SDUIComponent>,
+        val isLoading: Boolean = false,
+        val error: String? = null
+    ): ScreenState
 
     data class Error(
         val message: String
